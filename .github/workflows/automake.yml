@@ -1,0 +1,14 @@
+name: make
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: make all
+        run: |
+          sud apt install make
+          sudo make install

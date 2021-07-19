@@ -1,0 +1,15 @@
+#!/bin/bash
+
+
+__module=${1:-"NaN"}
+if [[ "$__module" == "NaN" ]]; then exit 0; fi
+
+res="$(lsmod | grep $__module)"
+
+if [[ "$res" != "" ]]; then rmmod $__module; fi
+
+insmod ${__module}.ko
+
+echo $res
+
+

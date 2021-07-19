@@ -1,0 +1,39 @@
+misc-modules
+    DESCRIPTION
+        To add a new module & include in the make process create a file under misc-modules (ie; misc-modules/my_module.c)
+        
+        An example kernel module that could be placed under misc-modules
+              
+            #include <linux/module.h>
+            
+            MODULE_LICENSE("GPL v2");            
+            MODULE_DESCRIPTION("welcome, to a template module that has not changed it's description.");
+            MODULE_AUTHOR("my-name <my-email@my-module>");
+            
+            static int __init mod_my_module(void)
+            {
+                    printk(KERN_ALERT "my-module has been created");
+                    return 0;
+            }
+            module_init(mod_my_module);
+            
+            static void __exit umod_my_module(void)
+            {
+                    printk(KERN_ALERT "my-module should be removing itself here");
+            }
+            module_exit(umod_my_module);
+
+
+        It's important to know the cleanup function has no value to return, so it is declared void. The module_exit declaration is necessary to enable to kernel to find your cleanup function.
+        The __exit modifier marks the code as being for module unload only (by causing the compiler to place it in a special ELF section). 
+        If your module is built directly into the kernel, or if your kernel is configured to disallow the unloading of modules, 
+        functions marked __exit are simply discarded. For this reason, a function marked __exit can be called only at module unload or system shutdown time; any other use is an error.
+        
+        So do not forget:
+
+                If your module does not define a cleanup function, _the kernel does not allow it to be unloaded._
+        
+
+        Seriously, do not forget.
+        
+    - John

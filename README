@@ -1,0 +1,7 @@
+libmod
+    DESCRIPTION
+        My playground for developing a kernel module.
+
+        Unstable, under-development, use at your own risk.
+
+    - John

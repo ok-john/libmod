@@ -1,0 +1,13 @@
+sub-modules
+    DESCRIPTION
+        GOTO
+
+                ../misc-modules
+
+        For the current modules & build system.
+
+        This is an attempt at a new build-system that allows for endlessly-nested kernel modules.
+        
+        Just an idea.
+
+    - John
