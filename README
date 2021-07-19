@@ -1,7 +1,11 @@
 libmod
     DESCRIPTION
-        My playground for developing a kernel module.
+        my playground for developing kernel modules
+        
+        for more info run
+        
+            make
 
-        Unstable, under-development, use at your own risk.
+        unstable, under-development, use at your own risk
 
-    - John
+    - john
