@@ -40,7 +40,7 @@ function clear
     rm -rf $VTAG
 }
 
-function is_checked_out
+function curb
 {
     git branch --list | grep "* " | tr -d " *"
 }
