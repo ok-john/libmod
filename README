@@ -6,6 +6,13 @@ libmod
         
             make
 
+        new dev-branch
+            ./tag incr
+            ./tag new-dev
+
+        update dev commit
+            ./tag uc
+
         unstable, under-development, use at your own risk
 
     - john
