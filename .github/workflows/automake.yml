@@ -2,6 +2,8 @@ name: make
 
 on:
   workflow_dispatch:
+  pull_request:
+  push:
 
 jobs:
   build:
@@ -11,4 +13,5 @@ jobs:
       - name: make all
         run: |
           sudo apt install make
+          sudo make trace
           sudo make first-install
