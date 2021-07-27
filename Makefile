@@ -22,6 +22,7 @@ del-ca:
 
 new-ca:
 		./misc-modules/CA/init.sh
+		$(MAKE) sign-link
 
 peek-ca:
 		./misc-modules/CA/peek.sh		 
@@ -38,7 +39,10 @@ modules:
 insert:
 		for n in $(SUBDIRS); do $(MAKE) -C $$n module_load; done
 
-sign:
+sign-link: 
+		rm -rf /bin/sign-file && ln -s "/lib/modules/$(shell uname -r)/build/scripts/sign-file" /bin/sign-file
+
+sign: sign-link
 		for n in $(SUBDIRS); do $(MAKE) -C $$n module_sign; done
 
 clean:
@@ -66,9 +70,6 @@ syslog-empty:
 
 ring-keys:
 		cat /proc/keys > .info.ring
-
-sign-link: 
-		rm -rf /bin/sign-file && ln -s "/lib/modules/$(shell uname -r)/build/scripts/sign-file" /bin/sign-file
 
 kdir:
 		echo /lib/modules/$(shell uname -r)
