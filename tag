@@ -68,10 +68,9 @@ function g
 function update
 {
     local __vers="$(v)"
-    git fetch remote "$(curb)"
-    git pull --tags
-    git tag -d $__vers
-    git push --tags
+    local __devb="dev-$__vers"
+    git fetch remote origin
+    git push --delete origin $__devb
     git tag $__vers
     git push --tags
 }
