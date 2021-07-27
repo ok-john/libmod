@@ -5,7 +5,7 @@ SHELL = /bin/bash
 SUBDIRS =  misc-modules
 MODULES = misc-modules
 STATICS = main
-MODULES = slock
+MODULES = vb
 
 help: 
 		cat Makefile
@@ -47,6 +47,9 @@ ring-keys:
 
 sign-link:
 		ln -s "/lib/modules/$(shell uname -r)/build/scripts/sign-file" /bin/sign-file
+
+kdir:
+		echo /lib/modules/$(shell uname -r)
 
 # -g to trace single functions
 # -F will _follow_ all but filter output on only one x | ie; -F ./main
