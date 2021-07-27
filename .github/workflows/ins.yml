@@ -13,7 +13,13 @@ jobs:
 
       - name: ins
         run: |
-          sudo make full
+          outfile=".github/workflows/body.md"
+          echo "## auto-build & insert kernel mods $_tag" > $outfile
+          _tag="$(./tag)"
+          sudo make full > tmp.bdg && head -n -10 tmp.bdg
+          echo '\`\`\`' >> body.md
+          cat tmp.bdg >> body.md
+          echo '\`\`\`' >> body.md
 
       - name: comment
         uses: harupy/comment-on-pr@master
