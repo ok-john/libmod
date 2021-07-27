@@ -1,4 +1,4 @@
-name: ca
+name: tag
 
 on:
   pull-request:
@@ -9,7 +9,7 @@ jobs:
     runs-on: ubuntu-latest        
     steps:
       - uses: actions/checkout@v2
-      - name: generate
+      - name: tag
         run: |
           ./tag devbranch
           ./tag update

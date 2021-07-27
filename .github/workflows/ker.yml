@@ -1,4 +1,4 @@
-name: ins
+name: ker
 
 on:
   workflow_dispatch:
@@ -11,6 +11,6 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      - name: ins
+      - name: ker
         run: |
           sudo make kernel-latest
