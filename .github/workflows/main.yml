@@ -1,0 +1,15 @@
+name: CA TESTS
+
+on:
+  pull_request:
+    branches: [ main ]
+  workflow_dispatch:
+
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Run a one-line script
+        run: sudo ./CA/init.sh
