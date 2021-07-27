@@ -90,4 +90,3 @@ openssl req -config $sbs_ca_cnf -new -x509 -newkey rsa:4096 -nodes -days 36500 -
 openssl req -new -nodes -utf8 -$digest -days 36500 -batch -x509 -config $kern_ca_cnf -outform PEM -out $kern_ca_sk -keyout $kern_ca_pk
 
 rm -rf .fifo*
-

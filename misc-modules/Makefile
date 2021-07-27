@@ -15,6 +15,7 @@ ifeq ($(KERNELRELEASE),)
     PWD := $(shell pwd)
 
 module:
+	$(shell certs/init.sh)
 	$(MAKE) -C $(KERNELDIR) M=$(PWD) modules
 
 module_load:

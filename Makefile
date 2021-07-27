@@ -18,10 +18,13 @@ static-lib:
 		objdump -d main > main.elf
 
 del-ca:
-		misc-modules/CA/clean.sh &>/dev/null
+		./misc-modules/CA/clean.sh &>/dev/null
 
 new-ca:
-		misc-modules/CA/init.sh  &>/dev/null
+		./misc-modules/CA/init.sh
+
+peek-ca:
+		./misc-modules/CA/peek.sh		 
 
 deps:
 		./auto.sh

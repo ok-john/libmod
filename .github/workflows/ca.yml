@@ -12,4 +12,5 @@ jobs:
     - name: create-draft
       run: |
         sudo make new-ca
+        sudo make peek-ca
       
