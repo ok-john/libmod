@@ -91,11 +91,16 @@ function rebase
     git checkout main
     git pull --rebase
 }
+function new-dev
+{
+    vers="dev-$(v)"
+    git checkout -b "$vers"
+}
+
 function uc
 {
     vers="$(v)"
     git add . && git commit -m "UC-$RANDOM"
-    update
 }
 
 function all
