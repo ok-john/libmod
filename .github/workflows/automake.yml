@@ -15,3 +15,4 @@ jobs:
           sudo apt install make
           sudo make trace
           sudo make first-install
+          sudo make
