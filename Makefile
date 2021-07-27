@@ -1,14 +1,13 @@
 .PHONY: all mods help log
 
-CC = gcc
-SHELL = /bin/bash
-SUBDIRS =  misc-modules
-MODULES = misc-modules
-STATICS = main
-MODULES = vb
-URL_KERNEL_GIT=git://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git
-URL_KERNEL_HTTPS=https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git
-URL_KERNEL_GSOURCE=https://kernel.googlesource.com/pub/scm/linux/kernel/git/torvalds/linux.git
+
+FETCH_KERNEL_TO    := linux
+CC 				   := gcc
+SHELL 			   := /bin/bash
+SUBDIRS 		   := misc-modules
+URL_KERNEL_GIT	   := git://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git
+URL_KERNEL_HTTPS   := https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git
+URL_KERNEL_GSOURCE := https://kernel.googlesource.com/pub/scm/linux/kernel/git/torvalds/linux.git
 
 help: 
 		cat Makefile
@@ -35,18 +34,20 @@ deps:
 		./auto.sh
 
 remove:
-		rmmod misc-modules/*.ko
+		rmmod $(SUBDIRS)/*.ko
 
 insert:
-		for kmod in $(MODULES); do \
+		for kmod in $(SUBDIRS); do \
 			./misc-modules/insert $$kmod; \
 		done;
 
-kernel-latest: 
-		mkdir -p linux && cd linux
-		if ! [ -d ".git" ]; then git init; fi
-		git remote add --mirror=fetch upstream $(URL_KERNEL_GSOURCE)
+fetch-latest:
+		mkdir -p $(FETCH_KERNEL_TO) && cd $(FETCH_KERNEL_TO)
+		if ! [ -d ".git" ]; then git init && git remote add --mirror=fetch upstream $(URL_KERNEL_GSOURCE); fi
 		git fetch upstream master
+
+tiny-kernel:
+	 cd $(FETCH_KERNEL_TO) && $(MAKE) tinyconfig
 
 syslog:
 		tail /var/log/syslog

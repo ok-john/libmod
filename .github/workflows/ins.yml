@@ -3,7 +3,6 @@ name: ins
 on:
   workflow_dispatch:
   push:
-    branch: [ main ]
   pull_request:
     types: [ assigned, opened, synchronize, reopened ]
 
