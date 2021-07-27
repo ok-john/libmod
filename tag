@@ -10,16 +10,11 @@ function ensure_euid
 {
         if [[ $EUID -ne 0 ]]; then echo -e "This function must be run as root, you're\n\t$(id)" && exit 1; fi
 }
-
 function v
 {
     if [ -d "$VTAG" ]; then
         echo "v$(cat $MVAR).$(cat $MNOR).$(cat $RLSE)"
     fi
-}
-function deps
-{
-        ensure_euid && apt install ${DEPS[@]}
 }
 function __init
 {
@@ -29,6 +24,45 @@ function __init
         echo 0 > $MNOR
         echo 0 > $RLSE
     fi
+}
+# Increment/decrement a version tag
+# by default it works on x.x.$RLSE 
+#
+#   see dec[m/M] && inc[m/M]
+#
+function incr 
+{
+    _vf=${1:-"$RLSE"}
+    i=$(cat $_vf)
+    i=$(($((i))+1))
+    echo $i > $_vf
+    v && exit $i
+}
+function decr 
+{
+    _vf=${1:-"$RLSE"}
+    i=$(cat $_vf)
+    i=$(($((i))-1))
+    echo $i > $_vf
+    v && exit $i
+}
+# Increment/Decrement Minor value (x.$MNOR.x)
+function incm
+{
+    incr $MNOR
+}
+function decm
+{
+    decr $MNOR
+}
+# Increment/Decrement Major value ($MVAR.x.x)
+function incM
+{
+    incr $MVAR
+} 
+function decM
+{
+    decr $MVAR
 }
 function ins
 {
@@ -65,34 +99,6 @@ function is_in_local {
         echo 1
     fi
 }
-
-
-function incr 
-{
-    _vf=${1:-"$RLSE"}
-    i=$(cat $_vf)
-    i=$(($((i))+1))
-    echo $i > $_vf
-}
-function decr 
-{
-     _vf=${1:-"$RLSE"}
-    i=$(cat $_vf)
-    i=$(($((i))-1))
-
-    echo $i > $_vf
-}
-
-
-function update
-{
-    local __vers="$(v)"
-    local __devb="dev-$__vers"
-    git fetch remote origin
-    git push --delete origin $__devb
-    git tag $__vers
-    git push --tags
-}
 function new-dev
 {   
     local _vrs="$(v)"
@@ -114,12 +120,10 @@ function new-dev
     fi
     git checkout $_db
 }
-
 function p
 {
     git pull --rebase && git push && git push --tags
 }
-
 function uc
 {
     git add . && git commit -m "$(v)-$RANDOM" && git pull --rebase

@@ -8,26 +8,46 @@ libmod
 
         check the current tag
 
+        Use ./tag to move through versions & create dev branches
+
+        
+
+        Tag traversal funcs
+
+            incr, decr, incm, decm, incM, decM
+
+
+        Example
+
             $ ./tag
-            > v0.0.9    
-
-        move between tags
+            > v0.0.10
 
             $ ./tag incr
-            > v0.0.10
+            > v0.0.11
+
+            $ ./tag incr
+            > v0.0.12
+
+            $ ./tag incm
+            > v0.1.12
+
+            $ ./tag decm
+            > v0.0.12
+
             $ ./tag decr
-            > v0.0.9
-            
-        new development pranch for automated testing
+            > v0.0.11
 
-            $ ./tag incr
+            $ ./tag decr
             > v0.0.10
-            $ ./tag new-dev
 
-        new commits to dev-branch
+            $ ./tag incM
+            > v1.0.10
 
-            $ ./tag uc
+            $ ./tag incM
+            > v2.0.10
 
+            $ ./tag incm
+            > v2.1.10
         
         unstable, under-development, use at your own risk
 
