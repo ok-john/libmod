@@ -111,8 +111,7 @@ function new-dev
 
 function uc
 {
-    vers="$(v)"
-    git add . && git commit -m "UC-$RANDOM" && git push && git push --tags
+    git add . && git commit -m "$(v)-$RANDOM" && git pull --rebase && git push && git push --tags
 }
 
 function all
