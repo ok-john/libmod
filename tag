@@ -101,8 +101,10 @@ function new-dev
     local _vrs="$(v)"
     local _db="dev-$_vrs"
     git checkout -b $_db
+    git add . && git commit -m "init-$_vrs"
+    git tag $_db
     git push --set-upstream origin $_db
-    git add . && git commit -m "$_vrs-$RANDOM" && git push
+    git push --tags
 }
 
 function uc
