@@ -112,8 +112,7 @@ function new-dev
         git push --tags
         exit 0
     fi
-    # git checkout $_db
-    # git pull --rebase            
+    git checkout $_db
 }
 
 function p
