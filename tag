@@ -91,17 +91,24 @@ function rebase
     git checkout main
     git pull --rebase
 }
-function new-dev
+function uc
 {
-    local _db="dev-$(v)"
+    vers="$(v)"
+    git add . && git commit -m "UC-$RANDOM" && git push
+}
+function new-dev
+{   
+    local _vrs="$(v)"
+    local _db="dev-$_vrs"
     git checkout -b $_db
     git push --set-upstream origin $_db
+    git add . && git commit -m "$_vrs-$RANDOM" && git push
 }
 
 function uc
 {
     vers="$(v)"
-    git add . && git commit -m "UC-$RANDOM"
+    git add . && git commit -m "UC-$RANDOM" && git push
 }
 
 function all
