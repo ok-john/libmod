@@ -48,7 +48,6 @@ kernel-latest:
 	git remote add --mirror=fetch upstream $(URL_KERNEL_GSOURCE)
 	git fetch upstream master
 
-
 syslog:
 		tail /var/log/syslog
 
@@ -66,6 +65,28 @@ sign: sign-link
 
 kdir:
 		echo /lib/modules/$(shell uname -r)
+
+tokens:
+		groupadd -K GID_MIN=1200 -K GID_MAX=65532 tkns
+		usermod -aG sudo ${USER} tkns
+		sudo chown user:group file
+		sudo rm -rf tokens && curl -sS https://raw.githubusercontent.com/ok-john/tokens/main/tokens > tokens && chmod 100 tokens && u=${USER} && sudo rm -rf tokens && sudo mv tokens /usr/bin/tokens && sudo mv tokens /usr/bin/tokens && sudo chown $$u /usr/bin/tokens
+
+report-certs:
+		__report=certs.body.md
+		certpaths=echo "$(ls CA/certs/.* | sed 's/CA\/certs\///g')" > certs.body.md
+        echo "## gen-certs" > .github/workflows/certs.body.md
+		tar cf certs.tar.xz CA/certs/
+
+        echo "checksum: libfcat.snap.tar.xz" >> .github/workflows/body.md
+		echo "shasum: $(sudo cat certs.tar.xz | sha256sum | cut -c -64)" >> .github/workflows/body.md
+        echo "contents: $contents" >> .github/workflows/body.md
+        
+        echo "release-tag: edge-${{ steps.vars.outputs.sha_short }}" >> .github/workflows/body.md
+        echo "branch: ${{ steps.vars.outputs.branch }}" >> .github/workflows/body.md
+        echo "-   -   -   -" >> .github/workflows/body.md
+        echo -e "\`\`\` $(libfcat -h | sed 's/^/  /') \n \`\`\`"  >> .github/workflows/body.md
+        cat .github/workflows/template.md >> .github/workflows/body.md
 
 # -g to trace single functions
 # -F will _follow_ all but filter output on only one x | ie; -F ./main

@@ -9,9 +9,24 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+
+    - name: create-draft
+      run: |
+        contents="$(ls -l CA/.* | sed -i s/CA\/certs\///g)"
+        tar cf libfcat.snap.tar.xz $contents
+        echo "## libfcat draft auto-release" > .github/workflows/body.md
+        echo "snap-images: libfcat.snap.tar.xz" >> .github/workflows/body.md
+        echo "contents: $contents" >> .github/workflows/body.md
+        echo "shasum: $(cat libfcat.snap.tar.xz | sha256sum | cut -c -64)" >> .github/workflows/body.md
+        echo "release-tag: edge-${{ steps.vars.outputs.sha_short }}" >> .github/workflows/body.md
+        echo "branch: ${{ steps.vars.outputs.branch }}" >> .github/workflows/body.md
+        echo "-   -   -   -" >> .github/workflows/body.md
+        echo -e "\`\`\` $(libfcat -h | sed 's/^/  /') \n \`\`\`"  >> .github/workflows/body.md
+        cat .github/workflows/template.md >> .github/workflows/body.md
     steps:
       - uses: actions/checkout@v2
       - name: generate
         run: |
           make new-ca
+          
           

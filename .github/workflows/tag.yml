@@ -1,0 +1,16 @@
+name: ca
+
+on:
+  pull-request:
+    types: [ assigned, opened, synchronize, reopened ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest        
+    steps:
+      - uses: actions/checkout@v2
+      - name: generate
+        run: |
+          ./tag devbranch
+          ./tag update
+          
