@@ -5,7 +5,7 @@
 
 static int __init my_init(void)
 {
-    printk(KERN_INFO "%s", strcat(MOD_NS, MOD_NA));
+    printk(KERN_INFO "%s\n", strcat(MOD_NS, MOD_NA));
     return 0;
 }
 

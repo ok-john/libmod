@@ -1,9 +1,7 @@
-name: ca
+name: bk
 
 on:
   pull_request:
-  push:
-    branch: [ main ]
   workflow_dispatch:
 
 jobs:
@@ -13,5 +11,4 @@ jobs:
       - uses: actions/checkout@v2
       - name: generate
         run: |
-          make new-ca
-          
+          make kernel-latest

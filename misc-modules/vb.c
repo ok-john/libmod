@@ -4,10 +4,7 @@
 #include <linux/fs.h>
 #include <linux/module.h>
             
-// Right now
-// 		input  0
-//		output 1
-//		debug  2
+
 #define VB_DEV_MAX 3
 #define VB_DEV_NAME "vb"
 
@@ -96,22 +93,22 @@ void vb_init(void)
 
         // add device to the system where "i" is a Minor number of the new device
         cdev_add(&vb_data[i].cdev, MKDEV(dev_major, i), 1);
-
+        
         // create device node /dev/mychardev-x where "x" is "i", equal to the Minor number
-        device_create(vb_class, NULL, MKDEV(dev_major, i), NULL, "VB_DEV_NAME-%d", i);
+        device_create(vb_class, NULL, MKDEV(dev_major, i), NULL, "%s-%d", VB_DEV_NAME, i);
     }
 }
 
-static int __init mod_my_module(void)
+static int __init mod_vb(void)
 {
-		printk(KERN_ALERT "my-module has been created");
+		printk(KERN_ALERT "vb mod");
 		return 0;
 }
 
-static void __exit umod_my_module(void)
+static void __exit umod_vb(void)
 {
-		printk(KERN_ALERT "my-module should be removing itself here");
+		printk(KERN_ALERT "vb umod");
 }
 
-module_init(mod_my_module);
-module_exit(umod_my_module);
+module_init(mod_vb);
+module_exit(umod_vb);
