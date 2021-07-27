@@ -51,9 +51,10 @@ remove:
 
 fetch-latest:
 		mkdir -p $(FETCH_KERNEL_TO) && cd $(FETCH_KERNEL_TO)
-		if ! [ -d ".git" ]; then git init && git remote add --mirror=fetch upstream $(URL_KERNEL_GSOURCE); fi
+		if ! [ -d ".git" ]; then git init; fi
+		git remote add --mirror=fetch upstream $(URL_KERNEL_GSOURCE)
 		git fetch upstream master
-
+		
 tiny-kernel:
 	 	cd $(FETCH_KERNEL_TO) && $(MAKE) tinyconfig
 
