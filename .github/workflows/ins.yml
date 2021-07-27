@@ -11,7 +11,25 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
+
       - name: ins
         run: |
-          sudo make install
-          sudo make ins
+          echo "##[set-output name=branch;]$(echo ${GITHUB_REF#refs/heads/})"
+          echo "::set-output name=sha_short::$(git rev-parse --short HEAD)"
+          outfile=".github/workflows/body.md"
+          echo "## kernel module build & insert logs $_tag" > $outfile
+          _tag="$(./tag)"
+          cat .github/workflows/template.md >> .github/workflows/body.md
+          echo "-   -   -   -   -   -" >> $outfile
+          echo "\`\`\`"
+          sudo make install >> $outfile
+          echo "\`\`\`"
+
+      - name: comment
+        uses: harupy/comment-on-pr@master
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          filename: "body.md"
+
+      

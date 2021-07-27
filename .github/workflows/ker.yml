@@ -24,7 +24,7 @@ jobs:
         make fetch-latest >> $outfile
         echo "### build tiny-kernel" >> $outfile
         make tiny-kernel  >> $outfile 
-        
+
     - name: comment
       uses: harupy/comment-on-pr@master
       env:

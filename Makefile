@@ -5,6 +5,7 @@ FETCH_KERNEL_TO    := linux
 CC 				   := gcc
 SHELL 			   := /bin/bash
 SUBDIRS 		   := misc-modules
+MODULES 		   := vb
 URL_KERNEL_GIT	   := git://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git
 URL_KERNEL_HTTPS   := https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git
 URL_KERNEL_GSOURCE := https://kernel.googlesource.com/pub/scm/linux/kernel/git/torvalds/linux.git
@@ -16,30 +17,37 @@ static-lib:
 		$(CC) -Wall main.c -o main 
 		objdump -d main > main.elf
 
-subdirs:
-		for n in $(SUBDIRS); do $(MAKE) -C $$n || exit 1; done
 
-clean:
-		for n in $(SUBDIRS); do $(MAKE) -C $$n clean; done
-		$(MAKE) syslog-empty
-		rm -rf *.elf main *.trace
+
 
 del-ca:
-		./CA/clean.sh &>/dev/null
+		misc-modules/CA/clean.sh &>/dev/null
 
 new-ca:
-		./CA/init.sh  &>/dev/null
+		misc-modules/CA/init.sh  &>/dev/null
 
 deps:
 		./auto.sh
 
-remove:
-		rmmod $(SUBDIRS)/*.ko
+subdirs:
+		for n in $(SUBDIRS); do $(MAKE) -C $$n || exit 1; done
+
+modules:
+		for n in $(SUBDIRS); do $(MAKE) -C $$n module; done
 
 insert:
-		for kmod in $(SUBDIRS); do \
-			./misc-modules/insert $$kmod; \
-		done;
+		for n in $(SUBDIRS); do $(MAKE) -C $$n module_load; done
+
+sign:
+		for n in $(SUBDIRS); do $(MAKE) -C $$n module_sign; done
+
+clean:
+		for n in $(SUBDIRS); do $(MAKE) -C $$n clean; done
+		rm -rf *.elf main *.trace
+
+remove:
+		for n in $(SUBDIRS); do $(MAKE) -C $$n module_unload; done
+
 
 fetch-latest:
 		mkdir -p $(FETCH_KERNEL_TO) && cd $(FETCH_KERNEL_TO)
@@ -47,7 +55,7 @@ fetch-latest:
 		git fetch upstream master
 
 tiny-kernel:
-	 cd $(FETCH_KERNEL_TO) && $(MAKE) tinyconfig
+	 	cd $(FETCH_KERNEL_TO) && $(MAKE) tinyconfig
 
 syslog:
 		tail /var/log/syslog
@@ -61,8 +69,6 @@ ring-keys:
 sign-link: 
 		rm -rf /bin/sign-file && ln -s "/lib/modules/$(shell uname -r)/build/scripts/sign-file" /bin/sign-file
 
-sign: sign-link
-		sign-file sha512 CA/certs/signing_key.priv CA/certs/signing_key.pem misc-modules/*.ko 
 
 kdir:
 		echo /lib/modules/$(shell uname -r)
@@ -109,13 +115,16 @@ trace-report:
 # ------- USAGE ----------
 
 # Run on your first install
-install: deps new-ca build sign
+install: deps build ins
 
 # Build everything
-build: subdirs
+build: modules new-ca sign
 
 # Build & insert all modules
 ins: build insert
+
+# Build & insert all modules
+refresh: build remove insert
 
 # Mounts the tracer; see other targets with format trace-*
 trace: trace-mount

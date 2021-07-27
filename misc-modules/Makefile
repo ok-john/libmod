@@ -14,11 +14,21 @@ ifeq ($(KERNELRELEASE),)
     # The current directory is passed to sub-makes as argument
     PWD := $(shell pwd)
 
-modules:
+module:
 	$(MAKE) -C $(KERNELDIR) M=$(PWD) modules
+
+module_load:
+	$(MAKE) -C $(KERNELDIR) M=$(PWD) module_load
+
+module_unload:
+	$(MAKE) -C $(KERNELDIR) M=$(PWD) modules_unload
 
 modules_install:
 	$(MAKE) -C $(KERNELDIR) M=$(PWD) modules_install
+
+module_sign:
+	sign-file sha512 CA/certs/signing_key.priv CA/certs/signing_key.pem vb.ko
+
 
 clean:
 	rm -rf *.o *~ core .depend .*.cmd *.ko *.mod.c .tmp_versions *.mod modules.order *.symvers *.d .*.*.d
