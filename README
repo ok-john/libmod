@@ -6,13 +6,29 @@ libmod
         
             make
 
-        new dev-branch
-            ./tag incr
-            ./tag new-dev
+        check the current tag
 
-        update dev commit
-            ./tag uc
+            $ ./tag
+            > v0.0.9    
 
+        move between tags
+
+            $ ./tag incr
+            > v0.0.10
+            $ ./tag decr
+            > v0.0.9
+            
+        new development pranch for automated testing
+
+            $ ./tag incr
+            > v0.0.10
+            $ ./tag new-dev
+
+        new commits to dev-branch
+
+            $ ./tag uc
+
+        
         unstable, under-development, use at your own risk
 
     - john

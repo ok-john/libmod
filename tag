@@ -50,6 +50,7 @@ function incr
     i=$(cat $_vf)
     i=$(($((i))+1))
     echo $i > $RLSE
+    v && exit 0
 }
 function decr
 {
@@ -57,6 +58,7 @@ function decr
     i=$(cat $_vf)
     i=$(($((i))-1))
     echo $i > $_vf
+    v && exit 0
 }
 function g
 {
