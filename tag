@@ -96,7 +96,7 @@ function uc
 {
     vers="$(v)"
     git add . && git commit -m "UC-$RANDOM"
-    git push
+    update
 }
 
 function all
