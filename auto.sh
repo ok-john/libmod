@@ -5,8 +5,11 @@ if [[ $EUID -ne 0 ]]; then echo "This script must be run as root" exit 1; fi
 declare -a DEPS=(
                   "apt-utils"
                   "gcc"
+                  "prctl"
+                  "libcap-ng-utils"
                   "pkg-config"
                   "openssl"
+                  "software-properties-common"
                   "libcrypto++6-dbg"
                   "libcrypto++6-dbg"
                   "libcrypto++-utils"
@@ -34,14 +37,11 @@ declare -a DEPS=(
                   "efibootmgr"
                   "mokutil"
                   "pstree"
-                  "losetup"
                 )
 
-apt install -y ${DEPS[@]} &>/dev/null
-apt update -y &>/dev/null
-apt upgrade -y &>/dev/null
-apt autoremove -y &>/dev/null
-
-echo -e "\n" && echo &>/dev/null
+apt install -y ${DEPS[@]} 
+apt update -y 
+apt upgrade -y 
+apt autoremove -y
 
 exit 0

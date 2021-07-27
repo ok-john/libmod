@@ -6,6 +6,9 @@ SUBDIRS =  misc-modules
 MODULES = misc-modules
 STATICS = main
 MODULES = vb
+URL_KERNEL_GIT=git://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git
+URL_KERNEL_HTTPS=https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git
+URL_KERNEL_GSOURCE=https://kernel.googlesource.com/pub/scm/linux/kernel/git/torvalds/linux.git
 
 help: 
 		cat Makefile
@@ -19,13 +22,16 @@ subdirs:
 
 clean:
 		for n in $(SUBDIRS); do $(MAKE) -C $$n clean; done
+		$(MAKE) syslog-empty
 		rm -rf *.elf main *.trace
-		truncate -s 0 /var/log/syslog
+
+del-ca:
+		./CA/clean.sh &>/dev/null
 
 new-ca:
-		./CA/init.sh
+		./CA/init.sh  &>/dev/null
 
-install:
+deps:
 		./auto.sh
 
 remove:
@@ -36,17 +42,26 @@ insert:
 			./misc-modules/insert $$kmod; \
 		done;
 
+kernel-latest: 
+		mkdir -p linux && cd linux
+		if ! [ -d ".git" ]; then git init; fi
+		git remote add --mirror=fetch upstream $(URL_KERNEL_GSOURCE)
+		git fetch upstream master
+
 syslog:
 		tail /var/log/syslog
 
 syslog-empty:
-		truncate -s 0 /var/log/syslog
+		truncate -s 0 /var/log/syslog &> /dev/null
 
 ring-keys:
 		cat /proc/keys > .info.ring
 
-sign-link:
-		ln -s "/lib/modules/$(shell uname -r)/build/scripts/sign-file" /bin/sign-file
+sign-link: 
+		rm -rf /bin/sign-file && ln -s "/lib/modules/$(shell uname -r)/build/scripts/sign-file" /bin/sign-file
+
+sign: sign-link
+		sign-file sha512 CA/certs/signing_key.priv CA/certs/signing_key.pem misc-modules/*.ko 
 
 kdir:
 		echo /lib/modules/$(shell uname -r)
@@ -93,13 +108,13 @@ trace-report:
 # ------- USAGE ----------
 
 # Run on your first install
-first-install: install new-ca all
+install: deps new-ca build sign
 
 # Build everything
-build: subdirs static-lib
+build: subdirs
 
 # Build & insert all modules
-all: clean build insert syslog
+ins: build insert
 
 # Mounts the tracer; see other targets with format trace-*
 trace: trace-mount
