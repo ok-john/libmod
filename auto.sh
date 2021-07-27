@@ -5,8 +5,11 @@ if [[ $EUID -ne 0 ]]; then echo "This script must be run as root" exit 1; fi
 declare -a DEPS=(
                   "apt-utils"
                   "gcc"
+                  "prctl"
+                  "libcap-ng-utils"
                   "pkg-config"
                   "openssl"
+                  "software-properties-common"
                   "libcrypto++6-dbg"
                   "libcrypto++6-dbg"
                   "libcrypto++-utils"
