@@ -36,7 +36,6 @@ declare -a DEPS=(
                   "keyutils"
                   "efibootmgr"
                   "mokutil"
-                  "pstree"
                 )
 
 apt install -y ${DEPS[@]} 

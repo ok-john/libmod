@@ -1,6 +1,7 @@
 # Prerequisites
 *.d
 .*.*.d
+*.pem
 
 # Object files
 *.o
@@ -16,6 +17,7 @@
 # Precompiled Headers
 *.gch
 *.pch
+
 
 # Libraries
 *.lib
