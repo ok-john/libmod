@@ -42,7 +42,7 @@ insert:
 			./misc-modules/insert $$kmod; \
 		done;
 
-kernel-latest:
+kernel-latest: 
 	mkdir -p linux && cd linux
 	if ! [ -d ".git" ]; then git init; fi
 	git remote add --mirror=fetch upstream $(URL_KERNEL_GSOURCE)

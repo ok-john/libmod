@@ -76,16 +76,7 @@ function devbranch
 {
     vers="$(v)"
     git checkout -b "dev-$vers"
-    git pull --tags
 }
-
-function clean-dev
-{
-    git pull --tags
-    git tag -d "dev-$vers"
-    git push --tags
-}
-
 
 function all
 {
