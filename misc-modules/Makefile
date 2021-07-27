@@ -28,6 +28,6 @@ clean:
 else
     # called from kernel build system 
 	# declare the modules you want installed here
-	obj-m := slock.o sconst.o
+	obj-m := vb.o
 endif
 
