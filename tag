@@ -10,16 +10,11 @@ function ensure_euid
 {
         if [[ $EUID -ne 0 ]]; then echo -e "This function must be run as root, you're\n\t$(id)" && exit 1; fi
 }
-
 function v
 {
     if [ -d "$VTAG" ]; then
         echo "v$(cat $MVAR).$(cat $MNOR).$(cat $RLSE)"
     fi
-}
-function deps
-{
-        ensure_euid && apt install ${DEPS[@]}
 }
 function __init
 {
@@ -30,6 +25,45 @@ function __init
         echo 0 > $RLSE
     fi
 }
+# Increment/decrement a version tag
+# by default it works on x.x.$RLSE 
+#
+#   see dec[m/M] && inc[m/M]
+#
+function incr 
+{
+    _vf=${1:-"$RLSE"}
+    i=$(cat $_vf)
+    i=$(($((i))+1))
+    echo $i > $_vf
+    v && exit $i
+}
+function decr 
+{
+    _vf=${1:-"$RLSE"}
+    i=$(cat $_vf)
+    i=$(($((i))-1))
+    echo $i > $_vf
+    v && exit $i
+}
+# Increment/Decrement Minor value (x.$MNOR.x)
+function incm
+{
+    incr $MNOR
+}
+function decm
+{
+    decr $MNOR
+}
+# Increment/Decrement Major value ($MVAR.x.x)
+function incM
+{
+    incr $MVAR
+} 
+function decM
+{
+    decr $MVAR
+}
 function ins
 {
     
@@ -39,87 +73,60 @@ function clear
 {
     rm -rf $VTAG
 }
+
 function curb
 {
     git branch --list | grep "* " | tr -d " *"
 }
+function is_in_remote
+{
+    local branch=${1}
+    local existed_in_remote=$(git ls-remote --heads origin ${branch})
 
-function incr 
-{
-    _vf=${1:-"$RLSE"}
-    i=$(cat $_vf)
-    i=$(($((i))+1))
-    echo $i > $RLSE
+    if [[ -z ${existed_in_remote} ]]; then
+        echo 0
+    else
+        echo 1
+    fi
 }
-function decr
-{
-     _vf=${1:-"$RLSE"}
-    i=$(cat $_vf)
-    i=$(($((i))-1))
-    echo $i > $_vf
-}
-function g
-{
-    local __vers=${1:-"$(v)"}
-    git pull --tags
-    git tag $__vers
-    
-}
-function update
-{
-    local __vers="$(v)"
-    local __devb="dev-$__vers"
-    git fetch remote origin
-    git push --delete origin $__devb
-    git tag $__vers
-    git push --tags
-}
+function is_in_local {
+    local branch=${1}
+    local existed_in_local=$(git branch --list ${branch})
 
-# devbranch
-function devbranch
-{
-    dbranch="dev-$(v)"
-    cbranch="$(curb)"
-    gflag=""
-    git fetch
-    git checkout "$dbranch"
-}
-
-function rebase
-{
-    git stash
-    git checkout main
-    git pull --rebase
-}
-function uc
-{
-    vers="$(v)"
-    git add . && git commit -m "UC-$RANDOM" && git push
+    if [[ -z ${existed_in_local} ]]; then
+        echo 0
+    else
+        echo 1
+    fi
 }
 function new-dev
 {   
     local _vrs="$(v)"
     local _db="dev-$_vrs"
-    local _tg="$vrs/dev"
-    git pull --rebase
-    git checkout -b $_db
-    git add . && git commit -m "init-$_vrs"
-    git tag $_tg
-    git push --set-upstream origin $_db
-    git push --tags
+    local _tg="$_db"
+    local _in_loc="$(is_in_local $_db)"
+    local _in_rem="$(is_in_remote $_db)"
+    echo $_in_loc
+    echo $_in_rem
+    # # Branch new repository
+    if [[ $_in_loc -ne 1 && $_in_rem -ne 1 ]]; then 
+        git add . && git commit -m "pre-init-$_vrs"
+        git checkout -b $_db
+        git pull --rebase
+        git tag $_tg
+        git push --set-upstream origin $_db
+        git push --tags
+        exit 0
+    fi
+    git checkout $_db
 }
-
+function p
+{
+    git pull --rebase && git push && git push --tags
+}
 function uc
 {
-    git add . && git commit -m "$(v)-$RANDOM" && git pull --rebase && git push && git push --tags
+    git add . && git commit -m "$(v)-$RANDOM" && git pull --rebase
 }
-
-function all
-{
-        openssl dgst -list | tr -d "\t\r\nSupported digests:" | tr -s " " | jq -R '{ "digests": split("-")[1:] }'
-}
-
-
-if [ "$1" == "-d:" ]; then ensure_euid && apt install openssl jq; fi
 
 __init && ${1:-"v"}

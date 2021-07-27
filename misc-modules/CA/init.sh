@@ -3,16 +3,14 @@
 # Creates Root and Intermediate certificates
 #
 if [[ $EUID -ne 0 ]]; then echo "This script must be run as root" exit 1; fi
-readonly __dir=$(dirname "$(realpath $0)") && cd $__dir
+readonly __dir=$(dirname "$(realpath $0)") && cd $__dir && rm -rf .fifo.*
+readonly ENV="$__dir"
+readonly __kdir="/lib/modules/$(uname -r)"
 readonly __kkey="/usr/src/linux-hwe-5.*-headers-*.*.*-*/certs/signing_key.x509"
+export all_openssl_curves="$(openssl ecparam -list_curves |  tr -d " \t\r" | jq -R 'split(":")[0]' | jq -s ' { "curves": . }')"
+export all_openssl_digests="$(openssl dgst -list | tr -d " \t\r\n" | jq -R 'split(":")[1] | { "digests": split("-")[1:] }')"
+
 if [ $? -ne 0 ]; then exit 0; fi
-
-openssl ecparam -list_curves |  tr -d " \t\r" | jq -R 'split(":")[0]' | jq -s ' { "curves": . }'
-openssl dgst -list | tr -d " \t\r\n" | jq -R 'split(":")[1] | { "digests": split("-")[1:] }'
-openssl ec -in $__kkey -text
-
-openssl ec -in certs/&.pem -text
-
 function exists
 {
     cat 
@@ -92,4 +90,3 @@ openssl req -config $sbs_ca_cnf -new -x509 -newkey rsa:4096 -nodes -days 36500 -
 openssl req -new -nodes -utf8 -$digest -days 36500 -batch -x509 -config $kern_ca_cnf -outform PEM -out $kern_ca_sk -keyout $kern_ca_pk
 
 rm -rf .fifo*
-

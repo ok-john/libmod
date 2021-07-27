@@ -2,8 +2,6 @@ name: ins
 
 on:
   workflow_dispatch:
-  push:
-    branch: [ main ]
   pull_request:
     types: [ assigned, opened, synchronize, reopened ]
 
@@ -12,7 +10,22 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
+
       - name: ins
         run: |
-          sudo make install
-          sudo make ins
+          outfile=".github/workflows/body.md"
+          echo "## auto-build & insert kernel mods $_tag" > $outfile
+          _tag="$(./tag)"
+          sudo make full > tmp.bdg && head -n -10 tmp.bdg
+          echo '\`\`\`' >> body.md
+          cat tmp.bdg >> body.md
+          echo '\`\`\`' >> body.md
+
+      - name: comment
+        uses: harupy/comment-on-pr@master
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          filename: "body.md"
+
+      

@@ -1,14 +1,14 @@
 .PHONY: all mods help log
 
-CC = gcc
-SHELL = /bin/bash
-SUBDIRS =  misc-modules
-MODULES = misc-modules
-STATICS = main
-MODULES = vb
-URL_KERNEL_GIT=git://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git
-URL_KERNEL_HTTPS=https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git
-URL_KERNEL_GSOURCE=https://kernel.googlesource.com/pub/scm/linux/kernel/git/torvalds/linux.git
+
+FETCH_KERNEL_TO    := linux
+CC 				   := gcc
+SHELL 			   := /bin/bash
+SUBDIRS 		   := misc-modules
+MODULES 		   := vb
+URL_KERNEL_GIT	   := git://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git
+URL_KERNEL_HTTPS   := https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git
+URL_KERNEL_GSOURCE := https://kernel.googlesource.com/pub/scm/linux/kernel/git/torvalds/linux.git
 
 help: 
 		cat Makefile
@@ -17,36 +17,50 @@ static-lib:
 		$(CC) -Wall main.c -o main 
 		objdump -d main > main.elf
 
-subdirs:
-		for n in $(SUBDIRS); do $(MAKE) -C $$n || exit 1; done
-
-clean:
-		for n in $(SUBDIRS); do $(MAKE) -C $$n clean; done
-		$(MAKE) syslog-empty
-		rm -rf *.elf main *.trace
-
 del-ca:
-		./CA/clean.sh &>/dev/null
+		./misc-modules/CA/clean.sh &>/dev/null
 
 new-ca:
-		./CA/init.sh  &>/dev/null
+		./misc-modules/CA/init.sh
+		$(MAKE) sign-link
+
+peek-ca:
+		./misc-modules/CA/peek.sh		 
 
 deps:
 		./auto.sh
 
-remove:
-		rmmod misc-modules/*.ko
+subdirs:
+		for n in $(SUBDIRS); do $(MAKE) -C $$n || exit 1; done
+
+modules:
+		for n in $(SUBDIRS); do $(MAKE) -C $$n module; done
 
 insert:
-		for kmod in $(MODULES); do \
-			./misc-modules/insert $$kmod; \
-		done;
+		for n in $(SUBDIRS); do $(MAKE) -C $$n module_load; done
 
-kernel-latest: 
-		mkdir -p linux && cd linux
+sign-link: 
+		rm -rf /bin/sign-file && ln -s "/lib/modules/$(shell uname -r)/build/scripts/sign-file" /bin/sign-file
+
+sign: sign-link
+		for n in $(SUBDIRS); do $(MAKE) -C $$n module_sign; done
+
+clean:
+		for n in $(SUBDIRS); do $(MAKE) -C $$n clean; done
+		rm -rf *.elf main *.trace
+
+remove:
+		for n in $(SUBDIRS); do $(MAKE) -C $$n module_unload; done
+
+
+fetch-latest:
+		mkdir -p $(FETCH_KERNEL_TO) && cd $(FETCH_KERNEL_TO)
 		if ! [ -d ".git" ]; then git init; fi
-		git remote add --mirror=fetch upstream $(URL_KERNEL_GSOURCE)
+		git remote add -f upstream $(URL_KERNEL_GSOURCE)
 		git fetch upstream master
+		
+tiny-kernel:
+	 	cd $(FETCH_KERNEL_TO) && $(MAKE) tinyconfig
 
 syslog:
 		tail /var/log/syslog
@@ -56,12 +70,6 @@ syslog-empty:
 
 ring-keys:
 		cat /proc/keys > .info.ring
-
-sign-link: 
-		rm -rf /bin/sign-file && ln -s "/lib/modules/$(shell uname -r)/build/scripts/sign-file" /bin/sign-file
-
-sign: sign-link
-		sign-file sha512 CA/certs/signing_key.priv CA/certs/signing_key.pem misc-modules/*.ko 
 
 kdir:
 		echo /lib/modules/$(shell uname -r)
@@ -107,14 +115,14 @@ trace-report:
 
 # ------- USAGE ----------
 
-# Run on your first install
-install: deps new-ca build sign
-
 # Build everything
-build: subdirs
+build: modules new-ca sign
+
+# Run on your first install
+full: deps build insert
 
 # Build & insert all modules
-ins: build insert
+refresh: sign remove insert
 
 # Mounts the tracer; see other targets with format trace-*
 trace: trace-mount
