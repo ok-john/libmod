@@ -100,9 +100,10 @@ function new-dev
     local _tg="$vrs/dev"
     local _in_loc="$(is_in_local $_db)"
     local _in_rem="$(is_in_remote $_db)"
-    
+    echo $_in_loc
+    echo $_in_rem
     # # Branch new repository
-    if [[ $_in_loc -eq 1 && $is_in_remote -eq 1 ]]; then 
+    if [[ $_in_loc -ne 1 && $_in_rem -ne 1 ]]; then 
         git add . && git commit -m "pre-init-$_vrs"
         git checkout -b $_db
         git pull --rebase
@@ -111,9 +112,8 @@ function new-dev
         git push --tags
         exit 0
     fi
-    
-    git checkout $_db
-    git pull --rebase            
+    # git checkout $_db
+    # git pull --rebase            
 }
 function uc
 {
