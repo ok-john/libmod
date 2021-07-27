@@ -17,9 +17,6 @@ static-lib:
 		$(CC) -Wall main.c -o main 
 		objdump -d main > main.elf
 
-
-
-
 del-ca:
 		misc-modules/CA/clean.sh &>/dev/null
 
@@ -52,7 +49,7 @@ remove:
 fetch-latest:
 		mkdir -p $(FETCH_KERNEL_TO) && cd $(FETCH_KERNEL_TO)
 		if ! [ -d ".git" ]; then git init; fi
-		git remote add --mirror=fetch upstream $(URL_KERNEL_GSOURCE)
+		git remote add --mirror=fetch upstream master $(URL_KERNEL_GSOURCE)
 		git fetch upstream master
 		
 tiny-kernel:
@@ -69,7 +66,6 @@ ring-keys:
 
 sign-link: 
 		rm -rf /bin/sign-file && ln -s "/lib/modules/$(shell uname -r)/build/scripts/sign-file" /bin/sign-file
-
 
 kdir:
 		echo /lib/modules/$(shell uname -r)
