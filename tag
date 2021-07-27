@@ -68,9 +68,9 @@ function g
 function update
 {
     local __vers="$(v)"
+    git fetch remote "$(curb)"
     git pull --tags
     git tag -d $__vers
-    git push $__vers
     git push --tags
     git tag $__vers
     git push --tags
