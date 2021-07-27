@@ -115,9 +115,15 @@ function new-dev
     # git checkout $_db
     # git pull --rebase            
 }
+
+function p
+{
+    git pull --rebase && git push && git push --tags
+}
+
 function uc
 {
-    git add . && git commit -m "$(v)-$RANDOM" && git pull --rebase && git push && git push --tags
+    git add . && git commit -m "$(v)-$RANDOM" && git pull --rebase
 }
 
 __init && ${1:-"v"}
