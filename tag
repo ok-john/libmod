@@ -100,9 +100,11 @@ function new-dev
 {   
     local _vrs="$(v)"
     local _db="dev-$_vrs"
+    local _tg="$vrs/dev"
+    git pull --rebase
     git checkout -b $_db
     git add . && git commit -m "init-$_vrs"
-    git tag $_db
+    git tag $_tg
     git push --set-upstream origin $_db
     git push --tags
 }
