@@ -93,8 +93,9 @@ function rebase
 }
 function new-dev
 {
-    vers="dev-$(v)"
-    git checkout -b "$vers"
+    local _db="dev-$(v)"
+    git checkout -b $_db
+    git push --set-upstream origin $_db
 }
 
 function uc
