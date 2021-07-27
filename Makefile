@@ -20,10 +20,12 @@ subdirs:
 clean:
 		for n in $(SUBDIRS); do $(MAKE) -C $$n clean; done
 		rm -rf *.elf main *.trace
-		truncate -s 0 /var/log/syslog
+
+del-ca:
+		./CA/clean.sh &>/dev/null
 
 new-ca:
-		./CA/init.sh
+		./CA/init.sh  &>/dev/null
 
 install:
 		./auto.sh
@@ -45,8 +47,11 @@ syslog-empty:
 ring-keys:
 		cat /proc/keys > .info.ring
 
-sign-link:
-		ln -s "/lib/modules/$(shell uname -r)/build/scripts/sign-file" /bin/sign-file
+sign-link: 
+		rm -rf /bin/sign-file && ln -s "/lib/modules/$(shell uname -r)/build/scripts/sign-file" /bin/sign-file
+
+sign: sign-link
+		sign-file sha512 CA/certs/signing_key.priv CA/certs/signing_key.pem misc-modules/*.ko 
 
 kdir:
 		echo /lib/modules/$(shell uname -r)
@@ -99,7 +104,7 @@ first-install: install new-ca all
 build: subdirs static-lib
 
 # Build & insert all modules
-all: clean build insert syslog
+all: clean build sign insert syslog
 
 # Mounts the tracer; see other targets with format trace-*
 trace: trace-mount

@@ -34,14 +34,11 @@ declare -a DEPS=(
                   "efibootmgr"
                   "mokutil"
                   "pstree"
-                  "losetup"
                 )
 
-apt install -y ${DEPS[@]} &>/dev/null
-apt update -y &>/dev/null
-apt upgrade -y &>/dev/null
-apt autoremove -y &>/dev/null
-
-echo -e "\n" && echo &>/dev/null
+apt install -y ${DEPS[@]} 
+apt update -y 
+apt upgrade -y 
+apt autoremove -y
 
 exit 0
