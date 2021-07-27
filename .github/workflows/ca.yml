@@ -3,6 +3,7 @@ name: CA TESTS
 on:
   pull_request:
   push:
+    branch: [ main ]
   workflow_dispatch:
 
 
