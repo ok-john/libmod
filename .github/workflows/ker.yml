@@ -2,7 +2,9 @@ name: ker
 
 on:
   workflow_dispatch:
-
+  pull_request:
+    types: [ assigned, opened, synchronize, reopened ]
+    
 jobs:
   build:
     runs-on: ubuntu-latest
