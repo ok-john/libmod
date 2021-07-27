@@ -4,13 +4,9 @@
 #include <linux/fs.h>
 #include <linux/module.h>
             
-// Right now
-// 		input  0
-//		output 1
-//		debug  2
+
 #define VB_DEV_MAX 3
 #define VB_DEV_NAME "vb"
-#define VB_DEV_MODNAME "mod"
 
 static int vb_open(struct inode *inode, struct file *file);
 static int vb_release(struct inode *inode, struct file *file);
@@ -24,6 +20,7 @@ MODULE_AUTHOR("john-s <john@sahhar.io>");
 
 // initialize file_operations
 static const struct file_operations vb_fops = {
+    .owner      = THIS_MODULE,
     .open       = vb_open,
     .release    = vb_release,
     .unlocked_ioctl = vb_ioctl,
@@ -104,14 +101,13 @@ void vb_init(void)
 
 static int __init mod_vb(void)
 {
-        
-		printk(KERN_ALERT "%s has been created", strcat(VB_DEV_NAME, VB_DEV_MODNAME));
+		printk(KERN_ALERT "vb mod");
 		return 0;
 }
 
 static void __exit umod_vb(void)
 {
-		printk(KERN_ALERT "should be removing itself here");
+		printk(KERN_ALERT "vb umod");
 }
 
 module_init(mod_vb);

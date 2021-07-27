@@ -56,6 +56,9 @@ sign: sign-link
 kdir:
 		echo /lib/modules/$(shell uname -r)
 
+kdir:
+		echo /lib/modules/$(shell uname -r)
+
 # -g to trace single functions
 # -F will _follow_ all but filter output on only one x | ie; -F ./main
 trace-mount:
