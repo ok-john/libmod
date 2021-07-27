@@ -11,4 +11,5 @@ jobs:
     runs-on: ubuntu-latest
     - name: create-draft
       run: |
-        make new-ca
+        sudo make new-ca
+      

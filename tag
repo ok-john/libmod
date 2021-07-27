@@ -1,6 +1,7 @@
 #!/bin/bash
 if [[ $EUID -eq 0 ]]; then echo "This script must not be run as root" && exit 1; fi
 readonly __dir=$(dirname "$(realpath $0)") && cd $__dir
+
 readonly VTAG="$__dir/.tag";
 readonly MVAR="$VTAG/MVAR";
 readonly MNOR="$VTAG/MNOR";
@@ -10,7 +11,6 @@ function ensure_euid
 {
         if [[ $EUID -ne 0 ]]; then echo -e "This function must be run as root, you're\n\t$(id)" && exit 1; fi
 }
-
 function v
 {
     if [ -d "$VTAG" ]; then
@@ -39,13 +39,12 @@ function curb
 {
     git branch --list | grep "* " | tr -d " *"
 }
-
 function incr 
 {
     _vf=${1:-"$RLSE"}
     i=$(cat $_vf)
     i=$(($((i))+1))
-    echo $i > $RLSE
+    echo $i > $_vf
     v && exit 0
 }
 function decr

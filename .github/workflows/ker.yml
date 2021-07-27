@@ -7,31 +7,26 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-
-    - name: init-env-vars
-      id: vars
-      shell: bash
+    - uses: actions/checkout@v2      
+    - name: ker
       run: |
         echo "##[set-output name=branch;]$(echo ${GITHUB_REF#refs/heads/})"
         echo "::set-output name=sha_short::$(git rev-parse --short HEAD)"
-
-      - uses: actions/checkout@v2
-      - name: ker
-        run: |
-          outfile=".github/workflows/body.md"
-          _tag="$(./tag)"
-          echo "## kernel-auto-build $_tag" > $outfile
-          echo "hash: ${{ steps.vars.outputs.sha_short }}"
-          echo "release-tag: " >> $outfile
-          echo "branch: ${{ steps.vars.outputs.branch }}" >> $outfile
-          cat .github/workflows/template.md >> .github/workflows/body.md
-          echo "-   -   -   -   -   -" >> $outfile
-          echo "### fetch-latest logs" >> $outfile
-          make fetch-latest >> $outfile
-          echo "### build tiny-kernel" >> $outfile
-          make tiny-kernel  >> $outfile 
-          
-    - uses: harupy/comment-on-pr@master
+        outfile=".github/workflows/body.md"
+        _tag="$(./tag)"
+        echo "## kernel-auto-build $_tag" > $outfile
+        echo "hash: ${{ steps.vars.outputs.sha_short }}"
+        echo "release-tag: " >> $outfile
+        echo "branch: ${{ steps.vars.outputs.branch }}" >> $outfile
+        cat .github/workflows/template.md >> .github/workflows/body.md
+        echo "-   -   -   -   -   -" >> $outfile
+        echo "### fetch-latest logs" >> $outfile
+        make fetch-latest >> $outfile
+        echo "### build tiny-kernel" >> $outfile
+        make tiny-kernel  >> $outfile 
+        
+    - name: comment
+      uses: harupy/comment-on-pr@master
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
