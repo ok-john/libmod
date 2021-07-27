@@ -97,7 +97,7 @@ function new-dev
 {   
     local _vrs="$(v)"
     local _db="dev-$_vrs"
-    local _tg="$vrs/dev"
+    local _tg="$_db"
     local _in_loc="$(is_in_local $_db)"
     local _in_rem="$(is_in_remote $_db)"
     echo $_in_loc
