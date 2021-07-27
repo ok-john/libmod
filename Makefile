@@ -47,7 +47,7 @@ kernel-latest:
 	if ! [ -d ".git" ]; then git init; fi
 	git remote add --mirror=fetch upstream $(URL_KERNEL_GSOURCE)
 	git fetch upstream master
-	
+
 
 syslog:
 		tail /var/log/syslog
@@ -115,7 +115,7 @@ install: deps new-ca build sign
 build: subdirs
 
 # Build & insert all modules
-all: build insert
+ins: build insert
 
 # Mounts the tracer; see other targets with format trace-*
 trace: trace-mount

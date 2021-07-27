@@ -13,4 +13,5 @@ jobs:
       - uses: actions/checkout@v2
       - name: generate
         run: |
+          make new-ca
           
