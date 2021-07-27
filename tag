@@ -39,6 +39,11 @@ function clear
 {
     rm -rf $VTAG
 }
+function curb
+{
+    git branch --list | grep "* " | tr -d " *"
+}
+
 function incr 
 {
     _vf=${1:-"$RLSE"}
@@ -74,8 +79,30 @@ function update
 # devbranch
 function devbranch
 {
+    dbranch="dev-$(v)"
+    cbranch="$(curb)"
+    gflag=""
+    if ! [ $dbranch == $cbranch ]; then 
+        gflag="-b"
+    fi
+    git checkout $gflag "$dbranch"
+    git remote add upstream origin $dbranch
+}
+
+function rebase
+{
+    git stash
+    git checkout main
+    git pull --rebase
+}
+function uc
+{
     vers="$(v)"
-    git checkout -b "dev-$vers"
+    devbranch
+    git add . && git commit -m "dev-$vers-$RANDOM"
+    git push --set-upstream origin $vers
+    update
+    rebase
 }
 
 function all
