@@ -96,7 +96,7 @@ function uc
 {
     vers="$(v)"
     git add . && git commit -m "UC-$RANDOM"
-    git push --set-upstream origin $vers
+    git push
 }
 
 function all
