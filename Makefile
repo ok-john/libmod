@@ -115,17 +115,14 @@ trace-report:
 
 # ------- USAGE ----------
 
-# Run on your first install
-install: deps build
-
 # Build everything
 build: modules new-ca sign
 
-# Build & insert all modules
-ins: build insert
+# Run on your first install
+full: deps build insert
 
 # Build & insert all modules
-refresh: build remove insert
+refresh: sign remove insert
 
 # Mounts the tracer; see other targets with format trace-*
 trace: trace-mount

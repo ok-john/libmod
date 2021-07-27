@@ -19,11 +19,6 @@ jobs:
         echo "release-tag: $_tag" >> $outfile
         echo "branch: $_br" >> $outfile
         cat .github/workflows/template.md >> .github/workflows/body.md
-        echo "-   -   -   -   -   -" >> $outfile
-        echo "### fetch-latest logs" >> $outfile
-        make fetch-latest >> $outfile
-        echo "### build tiny-kernel" >> $outfile
-        make tiny-kernel  >> $outfile 
 
     - name: comment
       uses: harupy/comment-on-pr@master
