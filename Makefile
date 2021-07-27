@@ -116,7 +116,7 @@ trace-report:
 # ------- USAGE ----------
 
 # Run on your first install
-install: deps build ins
+install: deps build
 
 # Build everything
 build: modules new-ca sign
