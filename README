@@ -1,78 +1,14 @@
 libmod
     DESCRIPTION
-        my playground for developing kernel modules
+        playground for developing kernel modules
         
-        for more info run
+        more info
         
             make
 
-    USAGE
-        Use ./tag to move through versions & create dev branches
+	
+	to install, build, sign and insert modules
 
-        1. create a fork of this repository & clone into it
+		
+	    make full
 
-        2. check the current tag
-
-            $ ./tag
-            > v0.0.10
-
-        3. create a dev-branch
-            #
-            # Increment one release-minor version
-            #
-            $ ./tag incr
-            > v0.0.11
-
-            # Create and publish a new dev-branch (it will rebase onto the remote branch if it already exists)
-            #
-            $ ./tag new-dev
-            > remote: Create a pull request for 'dev-v0.0.11' on GitHub by visiting:
-            > remote:      https://github.com/your-fork/libmod/pull/new/dev-v0.0.11
-
-        4. go to the pull request link & submit it
-
-        5. observer the github actions tests executing
-
-        6. Add commits locally & publish them to your dev-branch
-
-            $ ./tag uc && ./tag p
-
-        Tag traversal funcs
-
-            incr, decr, incm, decm, incM, decM
-
-        Example
-
-            $ ./tag
-            > v0.0.10
-
-            $ ./tag incr
-            > v0.0.11
-
-            $ ./tag incr
-            > v0.0.12
-
-            $ ./tag incm
-            > v0.1.12
-
-            $ ./tag decm
-            > v0.0.12
-
-            $ ./tag decr
-            > v0.0.11
-
-            $ ./tag decr
-            > v0.0.10
-
-            $ ./tag incM
-            > v1.0.10
-
-            $ ./tag incM
-            > v2.0.10
-
-            $ ./tag incm
-            > v2.1.10
-        
-        unstable, under-development, use at your own risk
-
-    - john

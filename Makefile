@@ -74,6 +74,15 @@ ring-keys:
 kdir:
 		echo /lib/modules/$(shell uname -r)
 
+tag-install: 
+	cat <(curl -sS https://raw.githubusercontent.com/ok-john/tag/main/tag) > tag && chmod 755 tag
+
+tag-iter: tag-install
+	./tag incr && ./tag it
+
+commit: tag-install
+	./tag it
+
 # -g to trace single functions
 # -F will _follow_ all but filter output on only one x | ie; -F ./main
 trace-mount:

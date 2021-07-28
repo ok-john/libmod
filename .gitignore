@@ -1,6 +1,8 @@
 # Prerequisites
 *.d
 /kernel/
+tag
+
 # Object files
 *.o
 *.ko
