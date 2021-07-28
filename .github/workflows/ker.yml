@@ -13,6 +13,7 @@ jobs:
     - name: ker
       run: |
         outfile=".github/workflows/body.md"
+        make install-tag
         _tag="$(./tag)"
         _br="$(./tag curb)"
         echo "## kernel-auto-build $_tag" > $outfile

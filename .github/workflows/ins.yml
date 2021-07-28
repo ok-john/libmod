@@ -14,6 +14,7 @@ jobs:
       - name: ins
         run: |
           outfile=".github/workflows/body.md"
+          make tag-install
           echo "## auto-build & insert kernel mods $_tag" > $outfile
           _tag="$(./tag)"
           sudo make full > tmp.bdg && head -n -10 tmp.bdg
