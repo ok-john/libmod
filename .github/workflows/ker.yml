@@ -10,15 +10,11 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2      
-    - name: ker
+    - name: pull-notif
       run: |
+        make tag-install
         outfile=".github/workflows/body.md"
-        make install-tag
-        _tag="$(./tag)"
-        _br="$(./tag curb)"
-        echo "## kernel-auto-build $_tag" > $outfile
-        echo "release-tag: $_tag" >> $outfile
-        echo "branch: $_br" >> $outfile
+        echo "## $(./tag)" > $outfile
         cat .github/workflows/template.md >> .github/workflows/body.md
 
     - name: comment
