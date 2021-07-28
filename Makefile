@@ -77,10 +77,10 @@ kdir:
 tag-install: 
 	cat <(curl -sS https://raw.githubusercontent.com/ok-john/tag/main/tag) > tag && chmod 755 tag
 
-tag-iter: tag-install
-	./tag incr && ./tag it
+tag-iter: 
+	./tag incr
 
-commit: tag-install
+commit: 	
 	./tag it
 
 # -g to trace single functions
