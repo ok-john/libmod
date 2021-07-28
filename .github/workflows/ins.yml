@@ -18,9 +18,10 @@ jobs:
           echo "## $(./tag)" > $outfile
           cat .github/workflows/template.md >> $outfile
           echo "succesfully built, signed & inserted the modules" >> $outfile
-          sudo make full > tmp.bdg && head -n -10 tmp.bdg
-          echo '\`\`\`' >> $outfile
-          cat tmp.bdg >> $outfile
+          sudo make full > tmp.bdg
+          cat tmp.bdg | tail -12
+          echo '\`\`\`bash' >> $outfile
+          cat tmp.bdg | tail -15 | sed 's/^/    /' >> $outfile
           echo '\`\`\`' >> $outfile
 
       - name: comment
