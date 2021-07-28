@@ -77,10 +77,10 @@ kdir:
 tag-install: 
 	cat <(curl -sS https://raw.githubusercontent.com/ok-john/tag/main/tag) > tag && chmod 755 tag
 
-tag-iter: tag-install
-	./tag incr && ./tag it
+tag-incr: 
+	./tag incr
 
-commit: tag-install
+tag-it: 	
 	./tag it
 
 # -g to trace single functions
@@ -124,8 +124,10 @@ trace-report:
 
 # ------- USAGE ----------
 
+commit: tag-install tag-it
+
 # Build everything
-build: modules new-ca sign
+build: modules new-ca sign 
 
 # Run on your first install
 full: deps build insert

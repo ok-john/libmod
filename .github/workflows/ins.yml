@@ -13,14 +13,15 @@ jobs:
 
       - name: ins
         run: |
-          outfile=".github/workflows/body.md"
           make tag-install
-          echo "## auto-build & insert kernel mods $_tag" > $outfile
-          _tag="$(./tag)"
-          sudo make full > tmp.bdg && head -n -10 tmp.bdg
-          echo '\`\`\`' >> body.md
-          cat tmp.bdg >> body.md
-          echo '\`\`\`' >> body.md
+          outfile=".github/workflows/body.md"
+          echo "## $(./tag)" > $outfile
+          cat .github/workflows/template.md >> $outfile
+          echo -e "\n -   -   -  \n" >> $outfile
+
+          sudo make full > tmp.bdg
+          echo -e "### succesfully built, signed & inserted the modules\n" >> $outfile
+          cat tmp.bdg | tail -15 | sed 's/^/    /' >> $outfile
 
       - name: comment
         uses: harupy/comment-on-pr@master
