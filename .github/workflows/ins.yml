@@ -17,12 +17,11 @@ jobs:
           outfile=".github/workflows/body.md"
           echo "## $(./tag)" > $outfile
           cat .github/workflows/template.md >> $outfile
-          echo "succesfully built, signed & inserted the modules" >> $outfile
+          echo -e "\n -   -   -  \n" >> $outfile
+
           sudo make full > tmp.bdg
-          cat tmp.bdg | tail -12
-          echo '\`\`\`bash' >> $outfile
+          echo -e "### succesfully built, signed & inserted the modules\n" >> $outfile
           cat tmp.bdg | tail -15 | sed 's/^/    /' >> $outfile
-          echo '\`\`\`' >> $outfile
 
       - name: comment
         uses: harupy/comment-on-pr@master
